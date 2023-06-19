@@ -10,10 +10,10 @@ import HealthKit
 
 struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var drinks: Drinks
     
-    @State private var weeklyDrinkLimit = 8
-    @State private var weekStartDay = "Monday"
-    @State private var syncWithHealth = false
+    @AppStorage("weeklyDrinkLimit") private var weeklyDrinkLimit = 8
+    @AppStorage("weekStartDay") private var weekStartDay = "Monday"
     
     let days = ["Sunday", "Monday"]
     
@@ -33,7 +33,9 @@ struct SettingsView: View {
                     }
                 }
                 Section {
-                    Toggle("Sync with Apple Health", isOn: $syncWithHealth)
+                    Button("Clear all drinks", role: .destructive) {
+                        drinks.items.removeAll()
+                    }
                 }
             }
             .navigationBarTitle("Settings", displayMode: .inline)

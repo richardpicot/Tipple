@@ -10,23 +10,38 @@ import SwiftUI
 struct HistoryView: View {
     @Environment(\.dismiss) var dismiss
     
+    @EnvironmentObject var drinks : Drinks
+    
     var body: some View {
         NavigationView {
-            Form {
-                Section {
-                    Text("Data")
-                } header: {
-                    Text("Drinks")
+            
+            List {
+                ForEach(drinks.items) { item in
+                    Text(item.date.formatted(date: .long, time: .shortened))
                 }
+                .onDelete(perform: removeItems)
             }
             
             .navigationBarTitle("History", displayMode: .inline)
-            .navigationBarItems(trailing: Button(action: {
-                                dismiss()
-                            }) {
-                                Text("Done").bold()
-                            })
+            .toolbar {
+                Button {
+                    let drink = DrinkItem(date: .now, amount: 1)
+                    drinks.items.append(drink)
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
+            
+//            .navigationBarItems(trailing: Button(action: {
+//                                dismiss()
+//                            }) {
+//                                Text("Done").bold()
+//                            })
         }
+    }
+    
+    func removeItems(at offsets: IndexSet) {
+        drinks.items.remove(atOffsets: offsets)
     }
 }
 

@@ -13,6 +13,9 @@
 		F88901A52A3C9EF4006F8F92 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88901A42A3C9EF4006F8F92 /* ContentView.swift */; };
 		F88901A72A3C9EF5006F8F92 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F88901A62A3C9EF5006F8F92 /* Assets.xcassets */; };
 		F88901AA2A3C9EF5006F8F92 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F88901A92A3C9EF5006F8F92 /* Preview Assets.xcassets */; };
+		F88C4FD12A4063350067F97D /* DrinkItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88C4FD02A4063350067F97D /* DrinkItem.swift */; };
+		F88C4FD52A40671F0067F97D /* Drinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88C4FD42A40671F0067F97D /* Drinks.swift */; };
+		F88C4FD72A4093030067F97D /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88C4FD62A4093030067F97D /* UserSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +27,9 @@
 		F88901A42A3C9EF4006F8F92 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F88901A62A3C9EF5006F8F92 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F88901A92A3C9EF5006F8F92 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F88C4FD02A4063350067F97D /* DrinkItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkItem.swift; sourceTree = "<group>"; };
+		F88C4FD42A40671F0067F97D /* Drinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drinks.swift; sourceTree = "<group>"; };
+		F88C4FD62A4093030067F97D /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +67,9 @@
 				F88901A42A3C9EF4006F8F92 /* ContentView.swift */,
 				F81171922A3CDCA900AA0D3F /* HistoryView.swift */,
 				F811718F2A3CBA6900AA0D3F /* SettingsView.swift */,
+				F88C4FD02A4063350067F97D /* DrinkItem.swift */,
+				F88C4FD62A4093030067F97D /* UserSettings.swift */,
+				F88C4FD42A40671F0067F97D /* Drinks.swift */,
 				F88901A62A3C9EF5006F8F92 /* Assets.xcassets */,
 				F88901A82A3C9EF5006F8F92 /* Preview Content */,
 			);
@@ -145,8 +154,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F88C4FD52A40671F0067F97D /* Drinks.swift in Sources */,
 				F81171902A3CBA6900AA0D3F /* SettingsView.swift in Sources */,
+				F88C4FD12A4063350067F97D /* DrinkItem.swift in Sources */,
 				F81171932A3CDCA900AA0D3F /* HistoryView.swift in Sources */,
+				F88C4FD72A4093030067F97D /* UserSettings.swift in Sources */,
 				F88901A52A3C9EF4006F8F92 /* ContentView.swift in Sources */,
 				F88901A32A3C9EF4006F8F92 /* TippleApp.swift in Sources */,
 			);

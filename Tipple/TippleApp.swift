@@ -11,7 +11,7 @@ import SwiftUI
 struct TippleApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(drinks: Drinks())
         }
     }
 }
