@@ -4,6 +4,7 @@
 //
 //  Created by Richard Picot on 16/06/2023.
 //
+import SwiftData
 import SwiftUI
 import HealthKit
 

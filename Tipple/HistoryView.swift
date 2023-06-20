@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HistoryView: View {
     @Environment(\.dismiss) var dismiss
@@ -20,7 +21,7 @@ struct HistoryView: View {
         NavigationView {
             
             List {
-                ForEach(drinks.items) { item in
+                ForEach(drinks) { item in
                     Text(item.date.formatted(date: .long, time: .shortened))
                 }
                 .onDelete(perform: removeItems)
@@ -29,8 +30,8 @@ struct HistoryView: View {
             .navigationBarTitle("History", displayMode: .inline)
             .toolbar {
                 Button {
-                    let drink = DrinkItem(date: .now, amount: 1)
-                    drinks.items.append(drink)
+//                    let drink = DrinkItem(date: .now, amount: 1)
+//                    drinks.insert(drink)
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -45,7 +46,7 @@ struct HistoryView: View {
     }
     
     func removeItems(at offsets: IndexSet) {
-        drinks.items.remove(atOffsets: offsets)
+//        drinks.items.remove(atOffsets: offsets)
     }
 }
 

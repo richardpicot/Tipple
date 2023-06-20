@@ -6,10 +6,16 @@
 //
 
 import Foundation
+import SwiftData
 
 @Model
-struct DrinkItem: Identifiable {
+class DrinkItem: Identifiable {
     let id = UUID()
     let date: Date
     let amount: Double
+    
+    init(date: Date, amount: Double) {
+            self.date = date
+            self.amount = amount
+        }
 }
