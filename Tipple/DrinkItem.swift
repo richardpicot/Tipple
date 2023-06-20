@@ -7,6 +7,7 @@
 
 import Foundation
 
+@Model
 struct DrinkItem: Identifiable {
     let id = UUID()
     let date: Date

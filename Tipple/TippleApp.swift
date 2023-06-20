@@ -12,6 +12,7 @@ struct TippleApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView(drinks: Drinks())
+                .modelContainer(for: DrinkItem.self)
         }
     }
 }

@@ -10,7 +10,11 @@ import SwiftUI
 struct HistoryView: View {
     @Environment(\.dismiss) var dismiss
     
-    @EnvironmentObject var drinks : Drinks
+//    @EnvironmentObject var drinks : Drinks
+    
+    @Query(FetchDescriptor(
+            sortBy: [SortDescriptor(\.date, order: .reverse)]),
+            animation: .snappy) private var drinks: [DrinkItem]
     
     var body: some View {
         NavigationView {

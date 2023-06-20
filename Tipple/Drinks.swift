@@ -7,6 +7,7 @@
 
 import Foundation
 
+// Dont need this with SwiftData
 class Drinks : ObservableObject {
     @Published var items = [DrinkItem]()
 }

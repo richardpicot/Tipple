@@ -8,7 +8,7 @@ import SwiftUI
 import HealthKit
 
 struct ContentView: View {
-    
+    @Environment (\.modelContext) private var context
     @StateObject var drinks = Drinks()
     
     @State private var showingSettings = false
@@ -99,9 +99,13 @@ struct ContentView: View {
     }
     
     func logDrink() {
+//        let drink = DrinkItem(date: .now, amount: 1)
+//        drinks.items.append(drink)
+//        print(drinks.items.count)
+        
+        // New SwiftData on
         let drink = DrinkItem(date: .now, amount: 1)
-        drinks.items.append(drink)
-        print(drinks.items.count)
+        context.insert(drink)
     }
 }
 
