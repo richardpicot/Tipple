@@ -2,26 +2,27 @@
 //  SettingsView.swift
 //  Tipple
 //
-//  Created by Richard Picot on 16/06/2023.
+//  Created by Richard Picot on 25/06/2023.
 //
 
 import SwiftUI
-import HealthKit
+import SwiftData
 
 struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var drinks: Drinks
+    @Environment(\.modelContext) private var modelContext
     
-    @AppStorage("weeklyDrinkLimit") private var weeklyDrinkLimit = 8
+    // TODO: combine DrinkLimit as one variable across Settings and ContentView
+    @AppStorage("DrinkLimit") private var weeklyLimit = 8
     @AppStorage("weekStartDay") private var weekStartDay = "Monday"
     
     let days = ["Sunday", "Monday"]
     
     var body: some View {
-        NavigationView {
+        NavigationView{
             Form {
                 Section {
-                    Picker("Weekly limit", selection: $weeklyDrinkLimit) {
+                    Picker("Weekly limit", selection: $weeklyLimit) {
                         ForEach(0..<15) {
                             Text("\($0) drinks")
                         }
@@ -34,7 +35,7 @@ struct SettingsView: View {
                 }
                 Section {
                     Button("Clear all drinks", role: .destructive) {
-                        drinks.items.removeAll()
+                        // TODO: Work out how to delete all items from model
                     }
                 }
             }
@@ -44,14 +45,11 @@ struct SettingsView: View {
                             }) {
                                 Text("Done").bold()
                             })
-            .fontDesign(.rounded)
         }
+        .fontDesign(.rounded)
     }
-        
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
-    }
+#Preview {
+    SettingsView()
 }

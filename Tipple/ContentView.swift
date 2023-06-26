@@ -2,33 +2,34 @@
 //  ContentView.swift
 //  Tipple
 //
-//  Created by Richard Picot on 16/06/2023.
+//  Created by Richard Picot on 25/06/2023.
 //
+
 import SwiftUI
-import HealthKit
+import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
     
-    @StateObject var drinks = Drinks()
+    @Query(sort: \Drink.dateAdded, order: .forward, animation: .default)
     
-    @State private var showingSettings = false
+    var drinks: [Drink]
+    
     @State private var showingHistory = false
-    @State private var weeklyDrinkLimit = 8
-    
+    @State private var showingSettings = false
+    @State private var weeklyLimit = 8
     
     var body: some View {
         NavigationView {
-            
-            //Logic to set a background gradient
             ZStack {
-                if drinks.items.count < weeklyDrinkLimit {
+                //Logic to set a background gradient
+                if drinks.count < weeklyLimit {
                     LinearGradient(
                         gradient: Gradient(colors: [Color.green.opacity(0.4), Color.green.opacity(0)]),
                         startPoint: .top,
                         endPoint: .bottom
                     )
                     .ignoresSafeArea()
-                    
                 } else {
                     LinearGradient(
                         gradient: Gradient(colors: [Color.orange.opacity(0.4), Color.green.opacity(0)]),
@@ -36,77 +37,87 @@ struct ContentView: View {
                         endPoint: .bottom
                     )
                     .ignoresSafeArea()
-                    
                 }
+                
                 VStack {
                     Spacer()
-                    VStack {
-                        Text("\(drinks.items.count)")
-                            .font(.system(size: 80))
-                        // logic to set the color of the count
-                            .foregroundColor({
-                                if drinks.items.count < weeklyDrinkLimit {
-                                    return .green
-                                } else {
-                                    return .orange
-                                }
-                            }())
-                            .fontWeight(.medium)
-                        
-                        
-                        Text("drinks this week")
-                            .font(.title3)
-                            .fontWeight(.medium)
-                            .foregroundStyle(.secondary)
-                    }
+                    Text("\(drinks.count)")
+                        .font(.system(size: 80))
+                    // logic to set the color of the count
+                        .foregroundColor({
+                            if drinks.count < weeklyLimit {
+                                return .green
+                            } else {
+                                return .orange
+                            }
+                        }())
+                        .fontWeight(.medium)
+                    
+                    Text("drinks this week")
+                        .font(.title3)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
                     
                     Spacer()
-                                        
-                    Button(action: logDrink) {
+                    
+                    Button {
+                        let drink = Drink(dateAdded: .now, amount: 1)
+                        modelContext.insert(drink)
+                    } label: {
                         Label("Log a drink", systemImage: "plus")
                     }
                     .buttonStyle(.bordered)
                     .controlSize(/*@START_MENU_TOKEN@*/.large/*@END_MENU_TOKEN@*/)
                     .buttonBorderShape(/*@START_MENU_TOKEN@*//*@PLACEHOLDER=shape: ButtonBorderShape@*/.capsule/*@END_MENU_TOKEN@*/)
-                }
-                .navigationBarTitle("Tipple", displayMode: .inline)
-                .fontDesign(.rounded)
-                .toolbar {
-                    Button {
-                        showingHistory = true
-                    } label: {
-                        Image(systemName: "list.bullet")
-                    }
-                    .sheet(isPresented: $showingHistory) {
-                        HistoryView()
-                            .presentationDetents([.medium, .large])
-                    }
                     
-                    Button {
-                        showingSettings.toggle()
-                    } label: {
-                        Image(systemName: "gear")
+                    // TODO: Remove when sheets work properly
+                    HStack(spacing: 32.0) {
+                        Button("History") {
+                            showingHistory = true
+                        }
+                        .sheet(isPresented: $showingHistory) {
+                            HistoryView()
+                                .presentationDetents([.medium, .large])
+                        }
+                        Button("Settings") {
+                            showingSettings = true
+                        }
+                        .sheet(isPresented: $showingSettings) {
+                            SettingsView()
+                                .presentationDetents([.medium, .large])
+                        }
                     }
-                    .sheet(isPresented: $showingSettings) {
-                        SettingsView()
-                            .presentationDetents([.medium, .large])
+                    .navigationBarTitle("Tipple", displayMode: .inline)
+                    .toolbar {
+                        Button {
+                            showingHistory = true
+                        } label: {
+                            Image(systemName: "list.bullet")
+                        }
+                        .sheet(isPresented: $showingHistory) {
+                            HistoryView()
+                                .presentationDetents([.medium, .large])
+                        }
+                        Button {
+                            showingSettings = true
+                        } label: {
+                            Image(systemName: "gear")
+                        }
+                        .sheet(isPresented: $showingSettings) {
+                            SettingsView()
+                                .presentationDetents([.medium, .large])
+                        }
                     }
+                    .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
                 }
             }
+            
         }
-        .environmentObject(drinks)
         .accentColor(.primary)
-    }
-    
-    func logDrink() {
-        let drink = DrinkItem(date: .now, amount: 1)
-        drinks.items.append(drink)
-        print(drinks.items.count)
+        .fontDesign(.rounded)
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView(drinks: Drinks())
-    }
+#Preview {
+    ContentView()
 }

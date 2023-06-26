@@ -2,51 +2,43 @@
 //  HistoryView.swift
 //  Tipple
 //
-//  Created by Richard Picot on 16/06/2023.
+//  Created by Richard Picot on 25/06/2023.
 //
 
 import SwiftUI
+import SwiftData
 
 struct HistoryView: View {
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
     
-    @EnvironmentObject var drinks : Drinks
+    @Query(sort: \Drink.dateAdded, order: .reverse, animation: .default)
+    var drinks: [Drink]
     
     var body: some View {
         NavigationView {
-            
-            List {
-                ForEach(drinks.items) { item in
-                    Text(item.date.formatted(date: .long, time: .shortened))
-                }
-                .onDelete(perform: removeItems)
+            List(drinks) { drink in
+                Text(drink.dateAdded.formatted(date: .long, time: .shortened))
+                    .swipeActions {
+                        Button("Delete", role: .destructive) {
+                            modelContext.delete(drink)
+                        }
+                    }
             }
-            
             .navigationBarTitle("History", displayMode: .inline)
             .toolbar {
-                Button {
-                    let drink = DrinkItem(date: .now, amount: 1)
-                    drinks.items.append(drink)
-                } label: {
-                    Image(systemName: "plus")
+                Button(action: {
+                    dismiss()
+                }) {
+                    Text("Done").bold()
                 }
             }
-            
-//            .navigationBarItems(trailing: Button(action: {
-//                                dismiss()
-//                            }) {
-//                                Text("Done").bold()
-//                            })
         }
-    }
-    
-    func removeItems(at offsets: IndexSet) {
-        drinks.items.remove(atOffsets: offsets)
+        .fontDesign(.rounded)
     }
 }
 
-struct HistoryView_Previews: PreviewProvider {
-    static var previews: some View {
-        HistoryView()
-    }
+
+#Preview {
+    HistoryView()
 }

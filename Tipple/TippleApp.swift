@@ -2,7 +2,7 @@
 //  TippleApp.swift
 //  Tipple
 //
-//  Created by Richard Picot on 16/06/2023.
+//  Created by Richard Picot on 25/06/2023.
 //
 
 import SwiftUI
@@ -11,7 +11,8 @@ import SwiftUI
 struct TippleApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(drinks: Drinks())
+            ContentView()
+                .modelContainer(for: Drink.self)
         }
     }
 }
