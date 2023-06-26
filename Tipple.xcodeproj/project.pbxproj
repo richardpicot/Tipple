@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F81EF5162A49ADB800594726 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81EF5152A49ADB800594726 /* AppSettings.swift */; };
 		F82D26252A4874B300754A86 /* TippleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82D26242A4874B300754A86 /* TippleApp.swift */; };
-		F82D26272A4874B300754A86 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82D26262A4874B300754A86 /* ContentView.swift */; };
+		F82D26272A4874B300754A86 /* DrinkCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82D26262A4874B300754A86 /* DrinkCountView.swift */; };
 		F82D26292A4874B400754A86 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F82D26282A4874B400754A86 /* Assets.xcassets */; };
 		F82D262C2A4874B400754A86 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F82D262B2A4874B400754A86 /* Preview Assets.xcassets */; };
 		F82D26332A4874CD00754A86 /* Drink.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82D26322A4874CD00754A86 /* Drink.swift */; };
@@ -17,9 +18,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F81EF5152A49ADB800594726 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		F82D26212A4874B300754A86 /* Tipple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tipple.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F82D26242A4874B300754A86 /* TippleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TippleApp.swift; sourceTree = "<group>"; };
-		F82D26262A4874B300754A86 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F82D26262A4874B300754A86 /* DrinkCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkCountView.swift; sourceTree = "<group>"; };
 		F82D26282A4874B400754A86 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F82D262B2A4874B400754A86 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F82D26322A4874CD00754A86 /* Drink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drink.swift; sourceTree = "<group>"; };
@@ -58,9 +60,10 @@
 			isa = PBXGroup;
 			children = (
 				F82D26242A4874B300754A86 /* TippleApp.swift */,
-				F82D26262A4874B300754A86 /* ContentView.swift */,
+				F82D26262A4874B300754A86 /* DrinkCountView.swift */,
 				F82D26342A4878D000754A86 /* HistoryView.swift */,
 				F82D26362A487B8200754A86 /* SettingsView.swift */,
+				F81EF5152A49ADB800594726 /* AppSettings.swift */,
 				F82D26322A4874CD00754A86 /* Drink.swift */,
 				F82D26282A4874B400754A86 /* Assets.xcassets */,
 				F82D262A2A4874B400754A86 /* Preview Content */,
@@ -147,7 +150,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F82D26372A487B8200754A86 /* SettingsView.swift in Sources */,
-				F82D26272A4874B300754A86 /* ContentView.swift in Sources */,
+				F82D26272A4874B300754A86 /* DrinkCountView.swift in Sources */,
+				F81EF5162A49ADB800594726 /* AppSettings.swift in Sources */,
 				F82D26352A4878D000754A86 /* HistoryView.swift in Sources */,
 				F82D26332A4874CD00754A86 /* Drink.swift in Sources */,
 				F82D26252A4874B300754A86 /* TippleApp.swift in Sources */,

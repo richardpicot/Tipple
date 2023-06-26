@@ -11,10 +11,7 @@ import SwiftData
 struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) private var modelContext
-    
-    // TODO: combine DrinkLimit as one variable across Settings and ContentView
-    @AppStorage("DrinkLimit") private var weeklyLimit = 8
-    @AppStorage("weekStartDay") private var weekStartDay = "Monday"
+    @EnvironmentObject private var appSettings: AppSettings
     
     let days = ["Sunday", "Monday"]
     
@@ -22,12 +19,12 @@ struct SettingsView: View {
         NavigationView{
             Form {
                 Section {
-                    Picker("Weekly limit", selection: $weeklyLimit) {
+                    Picker("Weekly limit", selection: $appSettings.drinkLimit) {
                         ForEach(0..<15) {
                             Text("\($0) drinks")
                         }
                     }
-                    Picker("Week starts on", selection: $weekStartDay) {
+                    Picker("Week starts on", selection: $appSettings.weekStartDay) {
                         ForEach(days, id: \.self) {
                             Text("\($0)")
                         }
@@ -52,4 +49,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
+        .environmentObject(AppSettings.shared)
 }
