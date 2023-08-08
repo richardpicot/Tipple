@@ -21,3 +21,12 @@ class Drink {
         self.amount = amount
     }
 }
+
+extension Drink {
+    var weekOf: Date {
+        let calendar = Calendar.current
+        let weekOfYear = calendar.component(.weekOfYear, from: self.dateAdded)
+        let year = calendar.component(.yearForWeekOfYear, from: self.dateAdded)
+        return calendar.date(from: DateComponents(weekOfYear: weekOfYear, yearForWeekOfYear: year))!
+    }
+}

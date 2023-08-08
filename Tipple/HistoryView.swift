@@ -12,8 +12,10 @@ struct HistoryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
     
-    @Query(sort: \Drink.dateAdded, order: .reverse, animation: .default)
+    @Query(sort: \Drink.dateAdded, order: .reverse)
     var drinks: [Drink]
+    
+    // TODO: Section header for this week, group previous weeks into single rows or decide not to show them
     
     var body: some View {
         NavigationView {

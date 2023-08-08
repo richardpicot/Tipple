@@ -23,10 +23,10 @@ class AppSettings: ObservableObject {
     static let shared = AppSettings()
     
     private init() {
-        // If user defaults haven't been set for drinkLimit set it to 8 as a default
+        // If user defaults haven't been set for drinkLimit set it to 6 as a default
         self.drinkLimit = UserDefaults.standard.integer(forKey: "drinkLimit")
                 if self.drinkLimit == 0 {
-                    self.drinkLimit = 8
+                    self.drinkLimit = 6
                 }
     }
 }

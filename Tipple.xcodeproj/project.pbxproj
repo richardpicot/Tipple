@@ -15,10 +15,27 @@
 		F82D26332A4874CD00754A86 /* Drink.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82D26322A4874CD00754A86 /* Drink.swift */; };
 		F82D26352A4878D000754A86 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82D26342A4878D000754A86 /* HistoryView.swift */; };
 		F82D26372A487B8200754A86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82D26362A487B8200754A86 /* SettingsView.swift */; };
+		F8473EC62A7D52BF00545133 /* LogDrinkFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8473EC52A7D52BF00545133 /* LogDrinkFormView.swift */; };
+		F88B12C62A6EE37A008CDE96 /* CustomButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88B12C52A6EE37A008CDE96 /* CustomButtonStyle.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F85DCC112A55637000DAA316 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		F81EF5152A49ADB800594726 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		F82370F02A6E89760041198F /* Tipple.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tipple.entitlements; sourceTree = "<group>"; };
+		F82370F12A6E8C4C0041198F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F82D26212A4874B300754A86 /* Tipple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tipple.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F82D26242A4874B300754A86 /* TippleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TippleApp.swift; sourceTree = "<group>"; };
 		F82D26262A4874B300754A86 /* DrinkCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkCountView.swift; sourceTree = "<group>"; };
@@ -27,6 +44,9 @@
 		F82D26322A4874CD00754A86 /* Drink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drink.swift; sourceTree = "<group>"; };
 		F82D26342A4878D000754A86 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		F82D26362A487B8200754A86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F8473EC52A7D52BF00545133 /* LogDrinkFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDrinkFormView.swift; sourceTree = "<group>"; };
+		F85DCC022A55636E00DAA316 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		F88B12C52A6EE37A008CDE96 /* CustomButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtonStyle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				F82D26232A4874B300754A86 /* Tipple */,
+				F85DCBFF2A55636E00DAA316 /* Frameworks */,
 				F82D26222A4874B300754A86 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,10 +80,14 @@
 		F82D26232A4874B300754A86 /* Tipple */ = {
 			isa = PBXGroup;
 			children = (
+				F82370F12A6E8C4C0041198F /* Info.plist */,
+				F82370F02A6E89760041198F /* Tipple.entitlements */,
 				F82D26242A4874B300754A86 /* TippleApp.swift */,
 				F82D26262A4874B300754A86 /* DrinkCountView.swift */,
+				F88B12C52A6EE37A008CDE96 /* CustomButtonStyle.swift */,
 				F82D26342A4878D000754A86 /* HistoryView.swift */,
 				F82D26362A487B8200754A86 /* SettingsView.swift */,
+				F8473EC52A7D52BF00545133 /* LogDrinkFormView.swift */,
 				F81EF5152A49ADB800594726 /* AppSettings.swift */,
 				F82D26322A4874CD00754A86 /* Drink.swift */,
 				F82D26282A4874B400754A86 /* Assets.xcassets */,
@@ -79,6 +104,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		F85DCBFF2A55636E00DAA316 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F85DCC022A55636E00DAA316 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -89,6 +122,7 @@
 				F82D261D2A4874B300754A86 /* Sources */,
 				F82D261E2A4874B300754A86 /* Frameworks */,
 				F82D261F2A4874B300754A86 /* Resources */,
+				F85DCC112A55637000DAA316 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -151,6 +185,8 @@
 			files = (
 				F82D26372A487B8200754A86 /* SettingsView.swift in Sources */,
 				F82D26272A4874B300754A86 /* DrinkCountView.swift in Sources */,
+				F8473EC62A7D52BF00545133 /* LogDrinkFormView.swift in Sources */,
+				F88B12C62A6EE37A008CDE96 /* CustomButtonStyle.swift in Sources */,
 				F81EF5162A49ADB800594726 /* AppSettings.swift in Sources */,
 				F82D26352A4878D000754A86 /* HistoryView.swift in Sources */,
 				F82D26332A4874CD00754A86 /* Drink.swift in Sources */,
@@ -285,12 +321,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Tipple/Tipple.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Tipple/Preview Content\"";
 				DEVELOPMENT_TEAM = 36P4XTQEHP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Tipple/Info.plist;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Tipple wants to access your health data to sync your drinks";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Tipple wants to access your health data to sync your drinks";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -314,12 +354,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Tipple/Tipple.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Tipple/Preview Content\"";
 				DEVELOPMENT_TEAM = 36P4XTQEHP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Tipple/Info.plist;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Tipple wants to access your health data to sync your drinks";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Tipple wants to access your health data to sync your drinks";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

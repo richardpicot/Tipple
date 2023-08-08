@@ -4,7 +4,6 @@
 //
 //  Created by Richard Picot on 25/06/2023.
 //
-
 import SwiftUI
 import SwiftData
 
@@ -13,27 +12,25 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appSettings: AppSettings
     
+    // Use index of this array to work out which day is set
     let days = ["Sunday", "Monday"]
     
     var body: some View {
-        NavigationView{
+        NavigationView {
             Form {
                 Section {
-                    Picker("Weekly limit", selection: $appSettings.drinkLimit) {
-                        ForEach(0..<15) {
-                            Text("\($0) drinks")
-                        }
-                    }
                     Picker("Week starts on", selection: $appSettings.weekStartDay) {
                         ForEach(days, id: \.self) {
                             Text("\($0)")
                         }
                     }
-                }
-                Section {
-                    Button("Clear all drinks", role: .destructive) {
-                        // TODO: Work out how to delete all items from model
+                    Picker("Weekly limit", selection: $appSettings.drinkLimit) {
+                        ForEach(0..<15) {
+                            Text("\($0) drinks")
+                        }
                     }
+                } footer: {
+                    Text("It's recommended to drink no more than 14 units of alcohol a week. That's around 6 medium glasses of wine, or 6 pints of 4% beer.")
                 }
             }
             .navigationBarTitle("Settings", displayMode: .inline)
@@ -43,7 +40,6 @@ struct SettingsView: View {
                                 Text("Done").bold()
                             })
         }
-        .fontDesign(.rounded)
     }
 }
 
