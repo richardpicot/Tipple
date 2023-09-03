@@ -13,9 +13,9 @@ import SwiftData
 class Drink {
     var id: UUID
     var dateAdded: Date
-    var amount: Double
+    var amount: Int
     
-    init(dateAdded: Date, amount: Double) {
+    init(dateAdded: Date, amount: Int) {
         self.id = UUID()
         self.dateAdded = dateAdded
         self.amount = amount

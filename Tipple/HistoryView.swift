@@ -15,19 +15,62 @@ struct HistoryView: View {
     @Query(sort: \Drink.dateAdded, order: .reverse)
     var drinks: [Drink]
     
-    // TODO: Section header for this week, group previous weeks into single rows or decide not to show them
+    private var isListEmpty: Bool {
+        return drinks.isEmpty
+    }
+    
+    // Function to format the date
+    func formatDate(_ date: Date) -> String {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let drinkDate = calendar.startOfDay(for: date)
+        
+        if today == drinkDate {
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "h:mma"
+            var timeString = timeFormatter.string(from: date)
+            timeString = timeString.replacingOccurrences(of: "AM", with: "am").replacingOccurrences(of: "PM", with: "pm")
+            return "Today at \(timeString)"
+        } else {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "E d MMM 'at' h:mma"
+            var formattedString = formatter.string(from: date)
+            formattedString = formattedString.replacingOccurrences(of: "AM", with: "am").replacingOccurrences(of: "PM", with: "pm")
+            return formattedString
+        }
+    }
     
     var body: some View {
         NavigationView {
-            List(drinks) { drink in
-                Text(drink.dateAdded.formatted(date: .long, time: .shortened))
-                    .swipeActions {
-                        Button("Delete", role: .destructive) {
-                            modelContext.delete(drink)
-                        }
+            // Wrap the conditional content inside a Group
+            Group {
+                // conditional for empty state
+                if isListEmpty {
+                    Text("No drinks logged")
+                        .font(.title2)
+                        .foregroundColor(Color.secondary)
+                        .fontWeight(.semibold)
+                } else {
+                    // show list of drinks
+//                    List(drinks) { drink in
+//                        Text(drink.dateAdded.formatted(date: .long, time: .shortened))
+                    List(drinks) { drink in
+                                            HStack {
+                                                Text(formatDate(drink.dateAdded))
+                                                Spacer()
+                                                Text("\(drink.amount)")
+                                                    .foregroundColor(.gray)
+                                            }
+                            .swipeActions {
+                                Button("Delete", role: .destructive) {
+                                    modelContext.delete(drink)
+                                    print("Drink deleted.")
+                                }
+                            }
                     }
+                }
             }
-            .navigationBarTitle("History", displayMode: .inline)
+            .navigationBarTitle("History", displayMode: .inline) // Apply to Group
             .toolbar {
                 Button(action: {
                     dismiss()

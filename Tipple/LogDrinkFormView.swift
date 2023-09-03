@@ -11,6 +11,7 @@ struct LogDrinkFormView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) private var modelContext
     
+    @State private var drinkLogged = false
     @State private var numberOfDrinks = ""
     @State private var date = Date()
     @State private var time = Date()
@@ -21,15 +22,22 @@ struct LogDrinkFormView: View {
         NavigationView {
             Form {
                 Section {
-                    TextField("Drinks", text: $numberOfDrinks)
-                        .focused($drinksFocus)
-                        .keyboardType(.numberPad)
+                    HStack {
+                        Text("Drinks")
+                        Spacer()
+                        TextField("", text: $numberOfDrinks)
+                            .focused($drinksFocus)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                    }
                 }
                 
                 Section {
                     DatePicker("Date",
                                selection: $date,
                                displayedComponents: .date)
+                    
                     
                     DatePicker("Time",
                                selection: $time,
@@ -45,8 +53,8 @@ struct LogDrinkFormView: View {
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Log") {
-                        if let numberOfDrinks = Double(numberOfDrinks) {
+                    Button("Save") {
+                        if let numberOfDrinksInt = Int(numberOfDrinks) {
                             var calendar = Calendar.current
                             calendar.timeZone = TimeZone.current
                             
@@ -54,9 +62,14 @@ struct LogDrinkFormView: View {
                             let timeComponents = calendar.dateComponents([.hour, .minute], from: time)
                             
                             if let combinedDate = calendar.date(from: DateComponents(calendar: calendar, timeZone: .current, year: dateComponents.year, month: dateComponents.month, day: dateComponents.day, hour: timeComponents.hour, minute: timeComponents.minute)) {
-                                for _ in 0..<Int(numberOfDrinks) {
-                                    let drink = Drink(dateAdded: combinedDate, amount: 1)
-                                    modelContext.insert(drink)
+                                
+                                // Create just one Drink object with the total amount
+                                let drink = Drink(dateAdded: combinedDate, amount: numberOfDrinksInt)
+                                modelContext.insert(drink)
+                                
+                                drinkLogged = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                    drinkLogged = false
                                 }
                                 dismiss()
                             }
@@ -70,6 +83,7 @@ struct LogDrinkFormView: View {
         .onAppear {
             drinksFocus = true
         }
+        .sensoryFeedback(.impact(), trigger: drinkLogged)
     }
 }
 

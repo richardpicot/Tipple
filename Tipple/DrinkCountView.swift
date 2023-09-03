@@ -11,27 +11,48 @@ struct DrinkCountView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appSettings: AppSettings
     
-    @Query(sort: \Drink.dateAdded, order: .forward)
+    @Query(sort: \Drink.dateAdded, order: .forward, animation: .default)
     
     var drinks: [Drink]
     
     @State private var showingHistory = false
     @State private var showingSettings = false
     @State private var showingLogDrinkForm = false
-//    @State private var weeklyLimit = 8
+    @State private var animatedDrinksThisWeek: Int = 0
+    @State private var showDrinkAnimation = false
+    @State private var isPressed = false
+
     
+    private func updateAnimatedDrinksThisWeek() {
+        withAnimation {
+            self.animatedDrinksThisWeek = drinksThisWeek
+        }
+    }
+    
+    private func startOfWeek(for date: Date, weekStartsOn startDay: String) -> Date {
+        var calendar = Calendar.current
+        calendar.firstWeekday = startDay == "Sunday" ? 1 : 2 // Sunday is 1, Monday is 2
+        return calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date))!
+    }
+
     private var drinksThisWeek: Int {
         var calendar = Calendar.current
+        calendar.timeZone = TimeZone.current
         let today = calendar.startOfDay(for: Date())
-        calendar.firstWeekday = 2 // Sunday 1, Monday is 2
-        //TODO: Test the above
-        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today))!
+
+        // Calculate the start of the week based on user's setting
+        let startOfWeek = self.startOfWeek(for: today, weekStartsOn: appSettings.weekStartDay)
+
+        var totalDrinksThisWeek = 0
         
-        let drinksThisWeek = drinks.filter { drink in
+        for drink in drinks {
             let drinkDate = calendar.startOfDay(for: drink.dateAdded)
-            return calendar.isDate(drinkDate, inSameDayAs: today) || (drinkDate >= startOfWeek && drinkDate < today)
+            if drinkDate >= startOfWeek && drinkDate <= today {
+                totalDrinksThisWeek += drink.amount // Sum up the 'amount' for each Drink object
+            }
         }
-        return drinksThisWeek.count
+        
+        return totalDrinksThisWeek
     }
     
     private var drinksRemaining: Int {
@@ -47,38 +68,35 @@ struct DrinkCountView: View {
     private var overLimit: Bool {
         return drinksThisWeek >= appSettings.drinkLimit
     }
-        
+    
     
     var body: some View {
         NavigationView {
             ZStack {
-                //Logic to set a background gradient
+                // Surface gradient
+                LinearGradient(
+                    gradient: Gradient(colors: [Color(red: 0.96, green: 0.92, blue: 0.84), Color(red: 0.96, green: 0.88, blue: 0.72)]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
                 
-                if overLimit {
-                    LinearGradient(
-                        gradient: Gradient(colors: [Color.orange.opacity(0.4), Color.orange.opacity(0.3)]),
-                        startPoint: .bottom,
-                        endPoint: .top
-                    )
-                    .ignoresSafeArea()
-                } else {
-                    LinearGradient(
-                        gradient: Gradient(colors: [Color.green.opacity(0.4), Color.green.opacity(0.3)]),
-                        startPoint: .bottom,
-                        endPoint: .top
-                    )
-                    .ignoresSafeArea()
-                }
+                BackgroundView(progress: CGFloat(animatedDrinksThisWeek) / CGFloat(appSettings.drinkLimit))
                 
                 VStack {
                     Spacer()
                     
-                    Text("\(drinksThisWeek)")
+                    Text("\(animatedDrinksThisWeek)")
                         .font(.system(size: 80))
-                    // logic to set the color of the count
-                        .foregroundColor(overLimit ? .orange : .green)
+                        .foregroundColor(.labelPrimary)
                         .fontWeight(.semibold)
                         .contentTransition(.numericText())
+                        .onAppear {
+                            updateAnimatedDrinksThisWeek()  // <---- Add this
+                        }
+                        .onChange(of: drinks) {
+                            updateAnimatedDrinksThisWeek()
+                        }
                     
                     VStack {
                         Text("Drinks this week.")
@@ -92,112 +110,59 @@ struct DrinkCountView: View {
                         }
                     }
                     .font(.body)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.labelPrimary)
                     
                     Spacer()
                     
-                    // Log a drink button
-                    Button {
-                        withAnimation {
-                            let drink = Drink(dateAdded: .now, amount: 1)
-                            modelContext.insert(drink)
-                        }
-                    } label: {
-                        Label("Log a Drink", systemImage: "plus")
-                    }
-                    .contextMenu {
-                        Button {
-                            let drink = Drink(dateAdded: .now, amount: 1)
-                            modelContext.insert(drink)
-                        } label: {
-                            Label("Now", systemImage: "plus")
-                        }
+                    //Buttons
+                    HStack {
+                        Spacer()
                         
-                        Button {
-                            var date = Date().addingTimeInterval(-6 * 60 * 60)
-                            // Check if the new date falls into the previous day
-                            if Calendar.current.startOfDay(for: date) < Calendar.current.startOfDay(for: Date()) {
-                                // If it does, reset the date to the start of today
-                                var components = Calendar.current.dateComponents([.year, .month, .day], from: Date())
-                                components.hour = 0
-                                components.minute = 0
-                                components.second = 0
-                                
-                                date = Calendar.current.date(from: components) ?? Date()
-                            }
-                            
-                            let drink = Drink(dateAdded: date, amount: 1)
-                            modelContext.insert(drink)
-                        } label: {
-                            Label("Earlier Today", systemImage: "clock.arrow.circlepath")
+                        Button(action: {
+                            showingSettings = true
+                        }) {
+                            Image(systemName: "gear")
+                                .font(.body.bold())
+                                .frame(width: 36, height: 36)
                         }
+                        .sheet(isPresented: $showingSettings) {
+                            SettingsView()
+                                .presentationDetents([.medium, .large])
+                        }
+                        .background(Color(red: 0.97, green: 0.78, blue: 0.48))
+                        .clipShape(Circle())
                         
-                        Button {
-                            // Get the current date.
-                                var components = Calendar.current.dateComponents([.year, .month, .day], from: Date())
-                                // Subtract one day from the current date to get yesterday's date.
-                                components.day = components.day! - 1
-                                // Set the time to 9pm.
-                                components.hour = 21
-                                components.minute = 0
-                                components.second = 0
-
-                                let date = Calendar.current.date(from: components) ?? Date()
-
-                                let drink = Drink(dateAdded: date, amount: 1)
-                                modelContext.insert(drink)
-                        } label: {
-                            Label("Yesterday Evening", systemImage: "moon")
-                        }
-
-                        Button {
-                            showingLogDrinkForm = true
-                        } label: {
-                            Label("More Options...", systemImage: "calendar")
-                        }
-                    }
-                    .buttonStyle(CustomButtonStyle(isOverLimit: overLimit))
-                    .padding(.horizontal)
-                    .sheet(isPresented: $showingLogDrinkForm) {
-                        LogDrinkFormView()
-                            .presentationDetents([.large])
-                    }
-
-                    
-                    // Navigation bar
-                    // TODO: Fix spacing of buttons
-                    .navigationBarTitle("Tipple", displayMode: .inline)
-                    .toolbar {
-                        HStack(spacing: 30) { // added to keep button spacing standard
-                            Button {
-                                showingHistory = true
-                            } label: {
-                                Image(systemName: "list.bullet")
-                            }
-                            .buttonStyle(BorderlessButtonStyle()) // hack to fix buttons working
-                            .sheet(isPresented: $showingHistory) {
-                                HistoryView()
-                                    .presentationDetents([.medium, .large])
-                            }
-                            Button {
-                                showingSettings = true
-                            } label: {
-                                Image(systemName: "gear")
-                            }
-                            .buttonStyle(BorderlessButtonStyle()) // hack to fix buttons working
-                            .sheet(isPresented: $showingSettings) {
-                                SettingsView()
-                                    .presentationDetents([.medium])
-                            }
-                        }
+                        Spacer()
                         
+                        // Add drink button
+                        AddDrinkButton(showingLogDrinkForm: $showingLogDrinkForm)
+                            .sheet(isPresented: $showingLogDrinkForm) {
+                                LogDrinkFormView()
+                            }
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            showingHistory = true
+                        }) {
+                            Image(systemName: "list.bullet")
+                                .font(.body.bold())
+                                .frame(width: 36, height: 36)
+                        }
+                        .sheet(isPresented: $showingHistory) {
+                            HistoryView()
+                                .presentationDetents([.medium, .large])
+                                .background(.thinMaterial)
+                        }
+                        .background(Color(red: 0.97, green: 0.78, blue: 0.48))
+                        .clipShape(Circle())
+                        
+                        Spacer()
                     }
-                    .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
                 }
             }
-            
         }
-        .accentColor(.primary)
+        .accentColor(.labelPrimary)
         .fontDesign(.rounded)
     }
 }
