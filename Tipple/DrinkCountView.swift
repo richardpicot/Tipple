@@ -10,10 +10,11 @@ import SwiftData
 struct DrinkCountView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appSettings: AppSettings
+    @Environment(\.colorScheme) var colorScheme
     
-    @Query(sort: \Drink.dateAdded, order: .forward, animation: .default)
+    @Query(sort: \DrinkEntry.dateAdded, order: .forward, animation: .default)
     
-    var drinks: [Drink]
+    var drinks: [DrinkEntry]
     
     @State private var showingHistory = false
     @State private var showingSettings = false
@@ -29,30 +30,22 @@ struct DrinkCountView: View {
         }
     }
     
-    private func startOfWeek(for date: Date, weekStartsOn startDay: String) -> Date {
-        var calendar = Calendar.current
-        calendar.firstWeekday = startDay == "Sunday" ? 1 : 2 // Sunday is 1, Monday is 2
-        return calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date))!
-    }
-
     private var drinksThisWeek: Int {
         var calendar = Calendar.current
-        calendar.timeZone = TimeZone.current
-        let today = calendar.startOfDay(for: Date())
+        calendar.firstWeekday = Weekday.allCases.firstIndex(of: Weekday(rawValue: appSettings.weekStartDay.rawValue)!)! + 1
 
-        // Calculate the start of the week based on user's setting
-        let startOfWeek = self.startOfWeek(for: today, weekStartsOn: appSettings.weekStartDay)
-
-        var totalDrinksThisWeek = 0
+        let now = Date()
+        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now))!
+        let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek)!
         
-        for drink in drinks {
-            let drinkDate = calendar.startOfDay(for: drink.dateAdded)
-            if drinkDate >= startOfWeek && drinkDate <= today {
-                totalDrinksThisWeek += drink.amount // Sum up the 'amount' for each Drink object
-            }
+        let range = startOfWeek...endOfWeek
+        
+        return drinks.filter {
+            let drinkDate = calendar.startOfDay(for: $0.dateAdded)
+            return range.contains(drinkDate)
+        }.reduce(0) {
+            $0 + $1.numberOfDrinks
         }
-        
-        return totalDrinksThisWeek
     }
     
     private var drinksRemaining: Int {
@@ -71,15 +64,12 @@ struct DrinkCountView: View {
     
     
     var body: some View {
+        let theme = Theme(colorScheme: colorScheme)
+        
         NavigationView {
             ZStack {
                 // Surface gradient
-                LinearGradient(
-                    gradient: Gradient(colors: [Color(red: 0.96, green: 0.92, blue: 0.84), Color(red: 0.96, green: 0.88, blue: 0.72)]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
+                theme.backgroundGradientPrimary.ignoresSafeArea()
                 
                 BackgroundView(progress: CGFloat(animatedDrinksThisWeek) / CGFloat(appSettings.drinkLimit))
                 
@@ -88,18 +78,18 @@ struct DrinkCountView: View {
                     
                     Text("\(animatedDrinksThisWeek)")
                         .font(.system(size: 80))
-                        .foregroundColor(.labelPrimary)
+                        .foregroundColor(theme.labelPrimary)
                         .fontWeight(.semibold)
-                        .contentTransition(.numericText())
+                        .contentTransition(.numericText(value: Double(animatedDrinksThisWeek)))
                         .onAppear {
-                            updateAnimatedDrinksThisWeek()  // <---- Add this
+                            updateAnimatedDrinksThisWeek()
                         }
                         .onChange(of: drinks) {
                             updateAnimatedDrinksThisWeek()
                         }
                     
                     VStack {
-                        Text("Drinks this week.")
+                        Text(drinksThisWeek == 1 ? "Drink this week." : "Drinks this week.")
                         
                         if drinksRemaining > 0 {
                             Text("\(drinksRemaining) more until you reach your limit.")
@@ -110,7 +100,8 @@ struct DrinkCountView: View {
                         }
                     }
                     .font(.body)
-                    .foregroundStyle(.labelPrimary)
+                    .foregroundStyle(theme.labelPrimary)
+                    .multilineTextAlignment(.center)
                     
                     Spacer()
                     
@@ -122,20 +113,20 @@ struct DrinkCountView: View {
                             showingSettings = true
                         }) {
                             Image(systemName: "gear")
-                                .font(.body.bold())
-                                .frame(width: 36, height: 36)
+                                .font(.system(size: 18, weight: .semibold))
                         }
                         .sheet(isPresented: $showingSettings) {
                             SettingsView()
                                 .presentationDetents([.medium, .large])
                         }
-                        .background(Color(red: 0.97, green: 0.78, blue: 0.48))
+                        .frame(minWidth: 44, minHeight: 44)
+                        .background(theme.buttonSecondary)
                         .clipShape(Circle())
                         
                         Spacer()
                         
                         // Add drink button
-                        AddDrinkButton(showingLogDrinkForm: $showingLogDrinkForm)
+                        AddDrinkButtonView(showingLogDrinkForm: $showingLogDrinkForm)
                             .sheet(isPresented: $showingLogDrinkForm) {
                                 LogDrinkFormView()
                             }
@@ -146,15 +137,15 @@ struct DrinkCountView: View {
                             showingHistory = true
                         }) {
                             Image(systemName: "list.bullet")
-                                .font(.body.bold())
-                                .frame(width: 36, height: 36)
+                                .font(.system(size: 18, weight: .semibold))
                         }
                         .sheet(isPresented: $showingHistory) {
                             HistoryView()
                                 .presentationDetents([.medium, .large])
                                 .background(.thinMaterial)
                         }
-                        .background(Color(red: 0.97, green: 0.78, blue: 0.48))
+                        .frame(minWidth: 44, minHeight: 44)
+                        .background(theme.buttonSecondary)
                         .clipShape(Circle())
                         
                         Spacer()
@@ -162,7 +153,16 @@ struct DrinkCountView: View {
                 }
             }
         }
-        .accentColor(.labelPrimary)
+        .onAppear {
+            updateAnimatedDrinksThisWeek()
+        }
+        .onChange(of: drinks) {
+            updateAnimatedDrinksThisWeek()
+        }
+        .onChange(of: appSettings.weekStartDay) {
+            updateAnimatedDrinksThisWeek()
+        }
+        .accentColor(theme.labelPrimary)
         .fontDesign(.rounded)
     }
 }

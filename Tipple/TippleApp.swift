@@ -13,14 +13,19 @@ struct TippleApp: App {
     
     init() {
             // Load the stored values from UserDefaults
-            appSettings.weekStartDay = UserDefaults.standard.string(forKey: "weekStartDay") ?? "Monday"
+            if let storedWeekStartDay = UserDefaults.standard.string(forKey: "weekStartDay"),
+               let weekday = Weekday(rawValue: storedWeekStartDay.lowercased()) {
+                appSettings.weekStartDay = weekday
+            }
+            
+            // Load drinkLimit
             appSettings.drinkLimit = UserDefaults.standard.integer(forKey: "drinkLimit")
         }
     
     var body: some Scene {
         WindowGroup {
             DrinkCountView()
-                .modelContainer(for: Drink.self)
+                .modelContainer(for: DrinkEntry.self)
                 .environmentObject(appSettings)
         }
     }

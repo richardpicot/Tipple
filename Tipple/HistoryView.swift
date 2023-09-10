@@ -11,9 +11,11 @@ import SwiftData
 struct HistoryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var appSettings = AppSettings.shared
+
     
-    @Query(sort: \Drink.dateAdded, order: .reverse)
-    var drinks: [Drink]
+    @Query(sort: \DrinkEntry.dateAdded, order: .reverse)
+    var drinks: [DrinkEntry]
     
     private var isListEmpty: Bool {
         return drinks.isEmpty
@@ -40,47 +42,117 @@ struct HistoryView: View {
         }
     }
     
+    // Function to decide if the entry is from the current week
+    private func isCurrentWeek(entryDate: Date) -> Bool {
+        let calendar = Calendar.current
+        var adjustedCalendar = calendar
+        adjustedCalendar.firstWeekday = Weekday.allCases.firstIndex(of: appSettings.weekStartDay)! + 1 // Update first weekday
+
+        let today = Date()
+
+        // Calculate the start of the current week and the entry week
+        let currentWeekStart = adjustedCalendar.date(from: adjustedCalendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today))!
+        let entryWeekStart = adjustedCalendar.date(from: adjustedCalendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: entryDate))!
+
+        return currentWeekStart == entryWeekStart
+    }
+    
+    // Add this function to HistoryView to check if there are entries for the current week
+    private func hasEntriesForCurrentWeek() -> Bool {
+        for drink in drinks {
+            if isCurrentWeek(entryDate: drink.dateAdded) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private var groupedDrinks: [(Date, [DrinkEntry])] {
+          let calendar = Calendar.current
+          var adjustedCalendar = calendar
+          adjustedCalendar.firstWeekday = Weekday.allCases.firstIndex(of: appSettings.weekStartDay)! + 1 // Update first weekday
+
+          var grouped: [Date: [DrinkEntry]] = [:]
+          
+          for drink in drinks {
+              let components = adjustedCalendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: drink.dateAdded)
+              if let startOfWeek = adjustedCalendar.date(from: components) {
+                  if grouped[startOfWeek] == nil {
+                      grouped[startOfWeek] = []
+                  }
+                  grouped[startOfWeek]?.append(drink)
+              }
+          }
+          
+          return grouped.sorted(by: { $0.0 > $1.0 }) // Sort by the start of the week
+      }
+    
     var body: some View {
-        NavigationView {
-            // Wrap the conditional content inside a Group
-            Group {
-                // conditional for empty state
-                if isListEmpty {
-                    Text("No drinks logged")
-                        .font(.title2)
-                        .foregroundColor(Color.secondary)
-                        .fontWeight(.semibold)
-                } else {
-                    // show list of drinks
-//                    List(drinks) { drink in
-//                        Text(drink.dateAdded.formatted(date: .long, time: .shortened))
-                    List(drinks) { drink in
-                                            HStack {
-                                                Text(formatDate(drink.dateAdded))
-                                                Spacer()
-                                                Text("\(drink.amount)")
-                                                    .foregroundColor(.gray)
-                                            }
-                            .swipeActions {
-                                Button("Delete", role: .destructive) {
-                                    modelContext.delete(drink)
-                                    print("Drink deleted.")
+            NavigationView {
+                List {
+                    // Current week section
+                    Section(header: hasEntriesForCurrentWeek() ? Text("This Week") : nil) {
+                        ForEach(drinks) { drink in
+                            if isCurrentWeek(entryDate: drink.dateAdded) {
+                                HStack {
+                                    Text(formatDate(drink.dateAdded))
+                                    Spacer()
+                                    Text("\(drink.numberOfDrinks)")
+                                        .foregroundColor(.gray)
+                                }
+                                .swipeActions {
+                                    Button("Delete", role: .destructive) {
+                                        modelContext.delete(drink)
+                                        print("Drink deleted.")
+                                    }
                                 }
                             }
+                        }
+                    }
+                    
+                    // Previous weeks as NavigationLinks
+                    Section(header: Text("Previous Weeks")) {
+                        ForEach(groupedDrinks, id: \.0) { weekStart, weekDrinks in
+                            if !isCurrentWeek(entryDate: weekStart) {
+                                NavigationLink(destination: WeekHistoryView(weekStart: weekStart, weekDrinks: weekDrinks)) {
+                                    HStack {
+                                        Text(weekStart, style: .date)
+                                        Spacer()
+                                        Text("\(weekDrinks.count)")
+                                            .foregroundColor(.gray)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .listStyle(InsetGroupedListStyle())
+                .navigationBarTitle("History", displayMode: .inline)
+                .toolbar {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Text("Done").bold()
                     }
                 }
             }
-            .navigationBarTitle("History", displayMode: .inline) // Apply to Group
-            .toolbar {
-                Button(action: {
-                    dismiss()
-                }) {
-                    Text("Done").bold()
-                }
-            }
+            .fontDesign(.rounded)
         }
-        .fontDesign(.rounded)
-    }
+     
+     private func entryRow(for drink: DrinkEntry) -> some View {
+         HStack {
+             Text(formatDate(drink.dateAdded))
+             Spacer()
+             Text("\(drink.numberOfDrinks)")
+                 .foregroundColor(.gray)
+         }
+         .swipeActions {
+             Button("Delete", role: .destructive) {
+                 modelContext.delete(drink)
+                 print("Drink deleted.")
+             }
+         }
+     }
 }
 
 

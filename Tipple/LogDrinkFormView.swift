@@ -64,7 +64,7 @@ struct LogDrinkFormView: View {
                             if let combinedDate = calendar.date(from: DateComponents(calendar: calendar, timeZone: .current, year: dateComponents.year, month: dateComponents.month, day: dateComponents.day, hour: timeComponents.hour, minute: timeComponents.minute)) {
                                 
                                 // Create just one Drink object with the total amount
-                                let drink = Drink(dateAdded: combinedDate, amount: numberOfDrinksInt)
+                                let drink = DrinkEntry(dateAdded: combinedDate, numberOfDrinks: numberOfDrinksInt)
                                 modelContext.insert(drink)
                                 
                                 drinkLogged = true

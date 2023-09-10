@@ -8,22 +8,13 @@
 import SwiftUI
 
 struct BackgroundView: View {
-    
-    let backgroundGradient = LinearGradient(
-        gradient: Gradient(colors: [Color(red: 0.96, green: 0.92, blue: 0.84), Color(red: 0.96, green: 0.88, blue: 0.72)]),
-        startPoint: .top,
-        endPoint: .bottom
-    )
-    
-    let progressGradient = LinearGradient(
-        gradient: Gradient(colors: [Color(red: 1, green: 0.79, blue: 0.46), Color(red: 0.91, green: 0.58, blue: 0.33)]),
-        startPoint: .top,
-        endPoint: .bottom
-    )
+    @Environment(\.colorScheme) var colorScheme
     
     var progress: CGFloat  // A number between 0 and 1
     
     var body: some View {
+        let theme = Theme(colorScheme: colorScheme) // Initialized your custom Theme
+
         GeometryReader { geometry in
             let totalHeight = geometry.size.height
             let totalWidth = geometry.size.width
@@ -31,10 +22,10 @@ struct BackgroundView: View {
             
             VStack {
                 ZStack(alignment: .bottom) {
-                    backgroundGradient
+                    theme.backgroundGradientPrimary
                     
                     Rectangle()
-                        .fill(progressGradient)
+                        .fill(theme.backgroundGradientSecondary)
                         .frame(width: totalWidth, height: totalHeight)
                         .mask(
                             VStack {
