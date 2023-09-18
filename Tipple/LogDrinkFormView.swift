@@ -32,12 +32,13 @@ struct LogDrinkFormView: View {
                             .frame(maxWidth: .infinity, alignment: .trailing)
                     }
                 }
-                
-                Section {
+
+                VStack {
                     DatePicker("Date",
                                selection: $date,
+                               in: ...Date(),
                                displayedComponents: .date)
-                    
+                    .datePickerStyle(GraphicalDatePickerStyle())
                     
                     DatePicker("Time",
                                selection: $time,

@@ -17,7 +17,8 @@
 		F82D26352A4878D000754A86 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82D26342A4878D000754A86 /* HistoryView.swift */; };
 		F82D26372A487B8200754A86 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82D26362A487B8200754A86 /* SettingsView.swift */; };
 		F8473EC62A7D52BF00545133 /* LogDrinkFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8473EC52A7D52BF00545133 /* LogDrinkFormView.swift */; };
-		F8A7CCC62AA35D46005918EC /* AddDrinkButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A7CCC52AA35D46005918EC /* AddDrinkButtonView.swift */; };
+		F8A037412AB2624B009C0252 /* LogDrinkTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A037402AB2624B009C0252 /* LogDrinkTip.swift */; };
+		F8A7CCC62AA35D46005918EC /* LogDrinkButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A7CCC52AA35D46005918EC /* LogDrinkButtonView.swift */; };
 		F8C9E6A32AAE039A0001666D /* Themes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C9E6A22AAE039A0001666D /* Themes.swift */; };
 		F8ED58C72AA5031700EA10D4 /* WeekHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8ED58C62AA5031700EA10D4 /* WeekHistoryView.swift */; };
 /* End PBXBuildFile section */
@@ -50,7 +51,8 @@
 		F82D26362A487B8200754A86 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F8473EC52A7D52BF00545133 /* LogDrinkFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDrinkFormView.swift; sourceTree = "<group>"; };
 		F85DCC022A55636E00DAA316 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		F8A7CCC52AA35D46005918EC /* AddDrinkButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDrinkButtonView.swift; sourceTree = "<group>"; };
+		F8A037402AB2624B009C0252 /* LogDrinkTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDrinkTip.swift; sourceTree = "<group>"; };
+		F8A7CCC52AA35D46005918EC /* LogDrinkButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogDrinkButtonView.swift; sourceTree = "<group>"; };
 		F8C9E6A22AAE039A0001666D /* Themes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themes.swift; sourceTree = "<group>"; };
 		F8ED58C62AA5031700EA10D4 /* WeekHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekHistoryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -94,10 +96,11 @@
 				F82D26342A4878D000754A86 /* HistoryView.swift */,
 				F8ED58C62AA5031700EA10D4 /* WeekHistoryView.swift */,
 				F82D26362A487B8200754A86 /* SettingsView.swift */,
-				F8A7CCC52AA35D46005918EC /* AddDrinkButtonView.swift */,
+				F8A7CCC52AA35D46005918EC /* LogDrinkButtonView.swift */,
 				F801F1592AA12610000484FB /* BackgroundView.swift */,
-				F82D26242A4874B300754A86 /* TippleApp.swift */,
+				F8A037402AB2624B009C0252 /* LogDrinkTip.swift */,
 				F8C9E6A22AAE039A0001666D /* Themes.swift */,
+				F82D26242A4874B300754A86 /* TippleApp.swift */,
 				F82D26282A4874B400754A86 /* Assets.xcassets */,
 				F82D262A2A4874B400754A86 /* Preview Content */,
 			);
@@ -203,10 +206,11 @@
 				F82D26372A487B8200754A86 /* SettingsView.swift in Sources */,
 				F8C9E6A32AAE039A0001666D /* Themes.swift in Sources */,
 				F801F15A2AA12610000484FB /* BackgroundView.swift in Sources */,
+				F8A037412AB2624B009C0252 /* LogDrinkTip.swift in Sources */,
 				F82D26272A4874B300754A86 /* DrinkCountView.swift in Sources */,
 				F8473EC62A7D52BF00545133 /* LogDrinkFormView.swift in Sources */,
 				F81EF5162A49ADB800594726 /* AppSettings.swift in Sources */,
-				F8A7CCC62AA35D46005918EC /* AddDrinkButtonView.swift in Sources */,
+				F8A7CCC62AA35D46005918EC /* LogDrinkButtonView.swift in Sources */,
 				F82D26352A4878D000754A86 /* HistoryView.swift in Sources */,
 				F82D26332A4874CD00754A86 /* DrinkEntry.swift in Sources */,
 				F8ED58C72AA5031700EA10D4 /* WeekHistoryView.swift in Sources */,

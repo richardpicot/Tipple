@@ -8,21 +8,21 @@
 import SwiftUI
 import SwiftData
 
-// Function to format the date
 func formatDate(_ date: Date) -> String {
     let calendar = Calendar.current
     let today = calendar.startOfDay(for: Date())
     let drinkDate = calendar.startOfDay(for: date)
     
+    let formatter = DateFormatter()
+    formatter.locale = Locale.current // Use the current user's locale
+
     if today == drinkDate {
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "h:mma"
-        var timeString = timeFormatter.string(from: date)
+        formatter.setLocalizedDateFormatFromTemplate("h:mm a") // This will take into account user locale for time
+        var timeString = formatter.string(from: date)
         timeString = timeString.replacingOccurrences(of: "AM", with: "am").replacingOccurrences(of: "PM", with: "pm")
         return "Today at \(timeString)"
     } else {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "E d MMM 'at' h:mma"
+        formatter.setLocalizedDateFormatFromTemplate("EEE d MMM h:mm a") // This will take into account user locale for day, date, and month
         var formattedString = formatter.string(from: date)
         formattedString = formattedString.replacingOccurrences(of: "AM", with: "am").replacingOccurrences(of: "PM", with: "pm")
         return formattedString

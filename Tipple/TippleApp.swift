@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import TipKit
 
 @main
 struct TippleApp: App {
     let appSettings = AppSettings.shared
+
     
     init() {
             // Load the stored values from UserDefaults

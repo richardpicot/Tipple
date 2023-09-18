@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct DrinkCountView: View {
     @Environment(\.modelContext) private var modelContext
@@ -22,13 +23,8 @@ struct DrinkCountView: View {
     @State private var animatedDrinksThisWeek: Int = 0
     @State private var showDrinkAnimation = false
     @State private var isPressed = false
-
     
-    private func updateAnimatedDrinksThisWeek() {
-        withAnimation {
-            self.animatedDrinksThisWeek = drinksThisWeek
-        }
-    }
+    var logDrinkTip = LogDrinkTip()
     
     private var drinksThisWeek: Int {
         var calendar = Calendar.current
@@ -60,6 +56,12 @@ struct DrinkCountView: View {
     
     private var overLimit: Bool {
         return drinksThisWeek >= appSettings.drinkLimit
+    }
+    
+    private func updateAnimatedDrinksThisWeek() {
+        withAnimation {
+            self.animatedDrinksThisWeek = drinksThisWeek
+        }
     }
     
     
@@ -124,12 +126,48 @@ struct DrinkCountView: View {
                         .clipShape(Circle())
                         
                         Spacer()
-                        
+
                         // Add drink button
-                        AddDrinkButtonView(showingLogDrinkForm: $showingLogDrinkForm)
-                            .sheet(isPresented: $showingLogDrinkForm) {
-                                LogDrinkFormView()
-                            }
+//                        LogDrinkButtonView(showingLogDrinkForm: $showingLogDrinkForm)
+//                            .sheet(isPresented: $showingLogDrinkForm, onDismiss: {appSettings.hasShownLogDrinkForm = true
+//                            }) {
+//                                LogDrinkFormView()
+//                            }
+//                            .popoverTip(LogDrinkTip(), arrowEdge: .bottom)
+                        
+                        Button {
+                            // empty action
+                        } label: {
+                            Image(systemName: "plus")
+                                .font(.system(size: 28))
+                        }
+                        .simultaneousGesture(LongPressGesture().onChanged { _ in
+                            print("Tap started")
+                            isPressed = true
+                        })
+                        .simultaneousGesture(LongPressGesture().onEnded { _ in
+                            print("Long press")
+                            isPressed = false
+                            showingLogDrinkForm = true
+                        })
+                        .simultaneousGesture(TapGesture().onEnded {
+                            print("Button tap logged")
+                            LogDrinkTip.isActive = true
+                            isPressed = false
+                            let drink = DrinkEntry(dateAdded: .now, numberOfDrinks: 1)
+                            modelContext.insert(drink)
+                        })
+                        .frame(minWidth: 80, minHeight: 80)
+                        .background(.white)
+                        .clipShape(Circle())
+                        .shadow(color: .black.opacity(0.06), radius: 20, x: 0, y: 10)
+                        .shadow(color: .labelPrimary.opacity(0.05), radius: 20, x: 0, y: 10)
+                        .scaleEffect(isPressed ? 0.85 : 1)
+                        .animation(.spring(response: 0.5, dampingFraction: 0.8, blendDuration: 0), value: isPressed)
+                        .popoverTip(LogDrinkTip(), arrowEdge: .bottom)
+                        .sheet(isPresented: $showingLogDrinkForm, content: {
+                            LogDrinkFormView()
+                        })
                         
                         Spacer()
                         
@@ -161,6 +199,13 @@ struct DrinkCountView: View {
         }
         .onChange(of: appSettings.weekStartDay) {
             updateAnimatedDrinksThisWeek()
+        }
+        .task {
+            // Configure and load your tips at app launch.
+            try? Tips.configure([
+                .displayFrequency(.immediate),
+                .datastoreLocation(.applicationDefault)
+            ])
         }
         .accentColor(theme.labelPrimary)
         .fontDesign(.rounded)
